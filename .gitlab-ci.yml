@@ -1,0 +1,39 @@
+image: docker:latest
+
+variables:
+  REPOSITORY_URL: genjerdotkom/gitlab_cicd_sample
+  IMAGE_TAG: latest
+
+services:
+- docker:dind
+
+before_script:
+  - docker login --username=genjerdotkom --password=4njarputra
+
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  script:
+    - echo "Building image..."
+    - docker build 
+      -t node_sample:latest 
+      --build-arg PORT=$PORT 
+      --no-cache .
+    - echo "Tagging image..."
+    - docker tag node_sample:latest $REPOSITORY_URL:latest
+    - echo "Pushing image..."
+    - docker push $REPOSITORY_URL:latest
+  only:
+    - master
+
+deploy:
+  stage: deploy
+  script:
+    - docker stop node_sample || true && docker rm node_sample || true
+    - docker container run -dt -p 8899:8899 --name node_sample $REPOSITORY_URL:latest
+    - docker image prune -f
+  only:
+    - master
