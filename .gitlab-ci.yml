@@ -8,7 +8,7 @@ services:
 - docker:dind
 
 before_script:
-  - docker login --username=genjerdotkom --password=4njarputra
+  - docker login --username=$DH_USERNAME --password=$DH_PASSWORD
 
 stages:
   - build
