@@ -1,7 +1,7 @@
 image: docker:latest
 
 variables:
-  REPOSITORY_URL: genjerdotkom/gitlab_cicd_sample
+  REPOSITORY_URL: genjerdotkom/cicd_sample
   IMAGE_TAG: latest
 
 services:
@@ -19,11 +19,11 @@ build:
   script:
     - echo "Building image..."
     - docker build 
-      -t node_sample:latest 
+      -t cicd_sample:latest 
       --build-arg PORT=$PORT 
       --no-cache .
     - echo "Tagging image..."
-    - docker tag node_sample:latest $REPOSITORY_URL:latest
+    - docker tag cicd_sample:latest $REPOSITORY_URL:latest
     - echo "Pushing image..."
     - docker push $REPOSITORY_URL:latest
   only:
@@ -32,8 +32,8 @@ build:
 deploy:
   stage: deploy
   script:
-    - docker stop node_sample || true && docker rm node_sample || true
-    - docker container run -dt -p 8899:8899 --name node_sample $REPOSITORY_URL:latest
+    - docker stop cicd_sample || true && docker rm cicd_sample || true
+    - docker container run -dt -p $PORT:$PORT --name cicd_sample $REPOSITORY_URL:latest
     - docker image prune -f
   only:
     - master

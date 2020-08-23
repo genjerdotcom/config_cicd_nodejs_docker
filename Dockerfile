@@ -2,9 +2,9 @@ FROM node:11-alpine
 
 ARG PORT
 
-RUN mkdir -p /usr/src/node-example
+RUN mkdir -p /usr/src/cicd_sample
 
-WORKDIR /usr/src/node-example
+WORKDIR /usr/src/cicd_sample
 
 COPY package*.json ./
 RUN npm config set package-lock false
@@ -14,6 +14,6 @@ RUN echo "module.exports = { PORT: $PORT }" > config.js
 COPY . .
 
 
-EXPOSE 8899
+EXPOSE 8787
 
 CMD ["npm", "start"]
